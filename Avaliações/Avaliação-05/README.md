@@ -33,7 +33,7 @@ Este projeto consiste em uma aplicação cliente em **Dart** desenvolvida para c
 
 3. Execute o programa cliente:
    ```bash
-   dart run main.dart
+   dart run bin/dart_cliente_alunos.dart
    ```
 
 ## 🖥️ Exemplo de Saída no Terminal
