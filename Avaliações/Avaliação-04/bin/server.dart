@@ -8,40 +8,32 @@ import 'package:shelf_router/shelf_router.dart';
 class Aluno {
   final int id;
   final String nome;
-  final String email;
-  final String curso;
-  final int idade;
+  final String disciplina;
   final double media;
-  final bool ativo;
+  final int faltas;
 
   const Aluno({
     required this.id,
     required this.nome,
-    required this.email,
-    required this.curso,
-    required this.idade,
+    required this.disciplina,
     required this.media,
-    required this.ativo,
+    required this.faltas,
   });
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'nome': nome,
-        'email': email,
-        'curso': curso,
-        'idade': idade,
+        'disciplina': disciplina,
         'media': media,
-        'ativo': ativo,
+        'faltas': faltas,
       };
 
   static Aluno fromJson(Map<String, dynamic> json) => Aluno(
         id: json['id'] as int,
         nome: json['nome'] as String,
-        email: json['email'] as String,
-        curso: json['curso'] as String,
-        idade: json['idade'] as int,
+        disciplina: json['disciplina'] as String,
         media: (json['media'] as num).toDouble(),
-        ativo: json['ativo'] as bool? ?? true,
+        faltas: json['faltas'] as int,
       );
 }
 
@@ -49,38 +41,30 @@ final List<Aluno> alunos = [
   const Aluno(
     id: 1,
     nome: 'Ana Souza',
-    email: 'ana.souza@example.com',
-    curso: 'Engenharia de Computação',
-    idade: 21,
-    media: 8.7,
-    ativo: true,
+    disciplina: 'PDM II',
+    media: 8.5,
+    faltas: 10,
   ),
   const Aluno(
     id: 2,
     nome: 'Bruno Lima',
-    email: 'bruno.lima@example.com',
-    curso: 'Engenharia Mecânica',
-    idade: 23,
-    media: 7.9,
-    ativo: true,
+    disciplina: 'PDM II',
+    media: 5.2, 
+    faltas: 12,
   ),
   const Aluno(
     id: 3,
     nome: 'Carla Mendes',
-    email: 'carla.mendes@example.com',
-    curso: 'Sistemas de Informação',
-    idade: 20,
-    media: 9.2,
-    ativo: true,
+    disciplina: 'PDM II',
+    media: 9.0,
+    faltas: 25,
   ),
   const Aluno(
     id: 4,
     nome: 'Diego Alves',
-    email: 'diego.alves@example.com',
-    curso: 'Engenharia Civil',
-    idade: 25,
-    media: 6.8,
-    ativo: false,
+    disciplina: 'PDM II',
+    media: 4.5,
+    faltas: 30,
   ),
 ];
 
@@ -97,15 +81,12 @@ Response jsonResponse(
 
 Response _listarAlunos(Request request) {
   final query = request.url.queryParameters;
-  final curso = query['curso']?.toLowerCase();
-  final ativo = query['ativo'];
+  final disciplina = query['disciplina']?.toLowerCase();
 
   var resultado = alunos.where((aluno) {
-    final correspondeCurso = curso == null ||
-        aluno.curso.toLowerCase().contains(curso);
-    final correspondeAtivo = ativo == null ||
-        aluno.ativo.toString() == ativo.toLowerCase();
-    return correspondeCurso && correspondeAtivo;
+    final correspondeDisciplina = disciplina == null ||
+        aluno.disciplina.toLowerCase().contains(disciplina);
+    return correspondeDisciplina;
   }).toList();
 
   final nome = query['nome']?.toLowerCase();
@@ -150,7 +131,7 @@ Future<Response> _criarAluno(Request request) async {
     return jsonResponse({'erro': 'JSON inválido.'}, status: 400);
   } catch (_) {
     return jsonResponse({
-      'erro': 'Dados inválidos. Informe nome, email, curso, idade e media.',
+      'erro': 'Dados inválidos. Informe nome, disciplina, media e faltas.',
     }, status: 400);
   }
 }
